@@ -46,7 +46,7 @@ The training phase will crawl the directories and assing a label to each image b
 
 This approach is covered in the ```shark_detection_selective_search.py``` script.
 
-A very simple and straightforward way of extending a classicator to a detector is by implementing a Region Proposal methodology. The technique is very simple and follows these steps
+A very simple and straightforward way of extending a classificator to a detector is by implementing a Region Proposal methodology. The technique is very simple and follows these steps:
 
 1. An algorithm proposes regions of interest of the input image.
 2. Your classification model classifies those regions.
@@ -71,7 +71,16 @@ Some of them are context regions, some others are very small or only partially o
 
 First of all, the regions proposed are sorted by the algorithm based of an "objectiveness" score, so that the most salient regions will be the first proposed. We can therefore decide to only process the fisrt _n_ rois, where _n_ now becomes an hyperparameter to be tuned based on the needs.
 
-We can also decide to cut small regions. For this, we will select only regions that have an area greater than _x_% of the original image, where _x_ is again an hyperparameter to tune.
+We can also decide to cut small regions. For this, we will select only regions that have an area greater than _x_% of the original image, where _x_ is again an hyperparameter to tune. 
 
+Once we have the selected regions it's time to apply our model
 
+#### Classification Model
+Number 2,3: these steps are carried out by the classification model chosen. The classification models are discussed extensively in the [sharknado](https://github.com/gcgrossi/sharknado) project and can be found here:
+
+[![Dataset](https://img.shields.io/badge/models-gray?style=for-the-badge&logo=google-drive)](https://drive.google.com/drive/folders/1U3eNxBYE__wC8WuOCTNcrJmrY4SCGnrh?usp=sharing)
+
+the model chosen for the project is the ```vggnet_finetune_wnegative_iou02.model```. This model is able not only to classify sharks, but also to classify regions of "context" (i.e. water, sky etc.) as "not shark". This rejection becomes critical with this approach, since the Selective Search algorithm proposes regions not containing sharks or containg only vague portions of skin.
+
+<img src="assets/selective_search_wrong.jpg" width="50%">
 
