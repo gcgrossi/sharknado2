@@ -82,5 +82,25 @@ Number 2,3: these steps are carried out by the classification model chosen. The 
 
 the model chosen for the project is the ```vggnet_finetune_wnegative_iou02.model```. This model is able not only to classify sharks, but also to classify regions of "context" (i.e. water, sky etc.) as "not shark". This rejection becomes critical with this approach, since the Selective Search algorithm proposes regions not containing sharks or containg only vague portions of skin.
 
+An example of what happens when not including a negative class is shown in the following picture:
+
 <img src="assets/selective_search_wrong.jpg" width="50%">
+
+The model classifies regions of context as shark with high confidence. Those false positives will therefore pass all the selection criteria, resulting in wrong detections.
+
+On the contrary, when using the model with a negative class, the situation is the following:
+
+<img src="assets/selective_search_good.png" width="50%">
+
+with false positives drastically reduced. The regions with very high confidence are selected. There are still more than one and, at the end, we will need to come up with just one region. We therefore need an algorithm to merge all the selected rois.
+
+#### Non Maxima Suppression
+
+------ Description -------
+
+Afetr the algorithm has been applied we finally have the only and one bounding box with prediction, as the one in the following picture:
+
+<img src="assets/Shark_Detection_Good_1.png" width="70%">
+
+This a good one picked on purpose, but there are some drawbacks in the method.
 
