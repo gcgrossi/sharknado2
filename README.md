@@ -120,3 +120,71 @@ In the Dataset Drive folder linked above the file ```shark_annotation.csv``` con
 
 [![Dataset](https://img.shields.io/badge/Annotate%20Images%20Tutorial-C10316?style=for-the-badge)](https://gcgrossi.github.io/google-vision-wrapper/tutorials/shark_annotation_tutorial.html)
 
+#### Architecture
+Once the dataset has been prepared and annotated, it's time to train a model. The architecture chosen for the purpose is the same used for training the classification model: The VGG16 Convolutional Neural Network, pre-trained on the ImageNet dataset. From here the methodology is the same applied to the classification model, where the fully connected head of the network has been removed, the inner layers have been freezeed, and a new 4-neuron output layer (trainable) has been attached to the body of the architecture and trained on the annotated dataset. 
+
+The resulting model is the following
+
+```
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_6 (InputLayer)         [(None, 224, 224, 3)]     0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, 224, 224, 64)      1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, 224, 224, 64)      36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, 112, 112, 64)      0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, 112, 112, 128)     73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, 112, 112, 128)     147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, 56, 56, 128)       0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, 56, 56, 256)       295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, 28, 28, 256)       0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, 28, 28, 512)       1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, 14, 14, 512)       0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, 7, 7, 512)         0         
+_________________________________________________________________
+flatten_5 (Flatten)          (None, 25088)             0         
+_________________________________________________________________
+dense_20 (Dense)             (None, 128)               3211392   
+_________________________________________________________________
+dense_21 (Dense)             (None, 64)                8256      
+_________________________________________________________________
+dense_22 (Dense)             (None, 32)                2080      
+_________________________________________________________________
+dense_23 (Dense)             (None, 4)                 132       
+=================================================================
+Total params: 17,936,548
+Trainable params: 3,221,860
+Non-trainable params: 14,714,688
+_________________________________________________________________
+None
+```
+#### Training
+The model has been trained using 1000 annotated images, with batch size of 32, initial learning rate of 1e-5, mean squared error loss and Adam optimizer. After 50 epochs the model converges to a good solution, as shown in the figure below:
+
+
+
