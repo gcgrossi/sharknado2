@@ -102,5 +102,21 @@ Afetr the algorithm has been applied we finally have the only and one bounding b
 
 <img src="assets/Shark_Detection_Good_1.png" width="70%">
 
-This a good one picked on purpose, but there are some drawbacks in the method.
+This i sa good one picked on purpose, but there are some drawbacks in the method. Even with a selection of the first 100 rois from Selective Search the algorithm is still too slow with a CPU, and the detection process takes a lot of time for just one image. There is still a good amount of false positives, given that the classification has not a very high accuracy.
+
+While for the latter we can deal with some false positive, the former is inacceptable. This is the reason with a more precise and efficient method has been chosen.
+
+### Boundig Box Regression
+
+One possible solution to improve the detector is to train a model that is capable of predicting the coordinates of the bounding box of the shark in the image. Once we have this, we can easily apply the classification model to the predicted roi.
+In order to do so we will need two elements:
+
+1. A .csv file with the image annotations: the image file name and the coordinates of the bounding box. This will be used to instruct a neural network on the position of the bounding box
+2. A suitable architecture to be trained on the annotated images
+
+#### Image annotations
+
+In the Dataset Drive folder linked above the file ```shark_annotation.csv``` contains the filename, folder (label), x top-left coordinate, y top-left coordinate, x bottom-right coordinate, y bottom-right coordinate of the bounding box. The file has been constructed using the ```annotate_images.py``` script, using a methodology that involves the usage of Google Vision API and the [google-vision-wrapper](https://github.com/gcgrossi/google-vision-wrapper) python package. A detailed tutorial on how to use this file and the methodology can be found here:
+
+[![Dataset](https://img.shields.io/badge/Annotate%20Images%20Tutorial-C10316?style=for-the-badge)](https://gcgrossi.github.io/google-vision-wrapper/tutorials/shark_annotation_tutorial.html)
 
