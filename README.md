@@ -94,9 +94,21 @@ On the contrary, when using the model with a negative class, the situation is th
 
 with false positives drastically reduced. The regions with very high confidence are selected. There are still more than one and, at the end, we will need to come up with just one region. We therefore need an algorithm to merge all the selected rois.
 
-#### Non Maxima Suppression
+#### Non-Maximum Suppression
 
------- Description -------
+The typical algorithm to select the right bounding box is the so called _Non-Maximum Suppresion_. The concept is very simple: you take the regions with the highest detection scores and suppress all the regions that sufficiently overlap with it, based on the Intersection over Union metric and cutoff threshold. At the end of the process, only the right bounding boxes are selected. The complete algorithm is as follows:
+
+**Input**: A list of Proposal boxes B, corresponding confidence scores S and overlap threshold N.
+
+**Output**: A list of filtered proposals D.
+
+**Algorithm**:
+
+1. Select the proposal with highest confidence score, remove it from B and add it to the final proposal list D. (Initially D is empty).
+2. Now compare this proposal with all the proposals — calculate the IOU (Intersection over Union) of this proposal with every other proposal. If the IOU is greater than the threshold N, remove that proposal from B.
+3. Again take the proposal with the highest confidence from the remaining proposals in B and remove it from B and add it to D.
+4. Once again calculate the IOU of this proposal with all the proposals in B and eliminate the boxes which have high IOU than threshold.
+5. This process is repeated until there are no more proposals left in B.
 
 Afetr the algorithm has been applied we finally have the only and one bounding box with prediction, as the one in the following picture:
 
@@ -225,14 +237,14 @@ The figure below shows some of the results obtained on the dataset:
 <img src="assets/bbox_detection.png" width="50%">
 
 ### Conclusions
-Build on the [sharknado](https://github.com/gcgrossi/sharknado) shark classification model, a natural extension to shark detection has been proposed. Using the same dataset two methods have been inspected:
+Built on the [sharknado](https://github.com/gcgrossi/sharknado) shark classification model, a natural extension to shark detection has been proposed. Using the same dataset two methods have been inspected:
 
 1. A Region Proposal methodology 
 2. A Bounding Box Regression methodology
 
 The Region Proposal method was based on classifing regions of images proposed by the OpenCV Selective Search algorithm and does not require any new model building, or retraining. The proposed regions are classified and only the high confidence predictions are retained. A Non-Maxima-Suppression algorithm merges the final rois into one. Even if the method is the natural and most straightforward extension of any classifier, it turned out to be extremely slow and imprecise. 
 
-The Bounding Box regression methodology aims at training a new model to predict the coordinates of the box surrounding the shark in the image. The methodology required annotating the dataset, building and retraining a new model. A fine tune of the VGG16 Convolutional Network has been chosen as architecture.
+The Bounding Box regression methodology aims at training a new model to predict the coordinates of the box surrounding the shark in the image. The methodology required annotating the dataset, building and retraining a new model. The methodology explained [here](https://gcgrossi.github.io/google-vision-wrapper/tutorials/shark_annotation_tutorial.html) has been chosen for the annotatio. A fine tune of the VGG16 Convolutional Network has been chosen as architecture.
 
 The latter method has been evaluated on a test set of roughly 60 images. The intersection over union (IoU) metric has been chosen to measure the regression performance. The sharknado classification has been applied to the rois obtained by the regression and the accuracy of the classification has been measured. On the test set the average IoU measured was 74% while the mean accuracy was measured to be 81%.
 
