@@ -184,7 +184,43 @@ _________________________________________________________________
 None
 ```
 #### Training
-The model has been trained using 1000 annotated images, with batch size of 32, initial learning rate of 1e-5, mean squared error loss and Adam optimizer. After 50 epochs the model converges to a good solution, as shown in the figure below:
+The model has been trained using 1000 annotated images, with batch size of 32, initial learning rate of 1e-5, mean squared error loss and Adam optimizer. The model has been trained using Google Colab in ```vggnet_bbregression_train.ipynb```.
 
+[![Open In Collab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1h8iulak79Vb5ZmGa3w3K9TXFAoQs9qCx?usp=sharing)
 
+After 50 epochs the model converges to a good solution, as shown in the figure below:
+
+<img src="assets/vggnet_bbregression_loss.jpg">
+
+#### Evaluation
+A mini test set of 60 images has been also dowloaded to understand the performance out-ofthe-sample. The images have been deliberately chosen to be tricky and deceiving for the network. The test dataset can be found here:
+
+[![Dataset](https://img.shields.io/badge/Download%20from%20Drive-gray?style=for-the-badge&logo=google-drive)](https://drive.google.com/drive/folders/1g3v30aG7L6DoBf6iUeJCMfis4G_Ez5aR?usp=sharing)
+
+with the same folder structure of the training data:
+
+```
+./
+└───test
+    ├───great_white_shark
+    ├───hammerhead_shark
+    ├───whale_shark
+    └───test_annotation.csv
+```
+
+And they have been annotated using the same method described for the training data. The annotations can be found in the file ```test_annotation.csv```
+
+In order to evaluate the performace of the bounding box regression the metric has been chosen to measures the degree of overlap between the predicted bounding box and the true bounding box. The Intersection over Union (IoU) measures the ratio between the area of the intersection of the two regions and the area of their union. In this way, a high IoU represents a strong compatibility between the prediction and the truth. 
+
+For the classification task, the accuracy metric has been chosen.
+
+The average IoU and accuracy obtained on the test set are summarized below:
+
+|       IoU        | Accuracy           |
+| --- | --- |
+|    74%   | 81%           | 
+
+The figure below shows some of the results obtained on the dataset:
+
+<img src="assets/bbox_detection.png" width="50%">
 
