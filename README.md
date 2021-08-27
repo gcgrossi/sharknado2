@@ -224,3 +224,17 @@ The figure below shows some of the results obtained on the dataset:
 
 <img src="assets/bbox_detection.png" width="50%">
 
+### Conclusions
+Build on the [sharknado](https://github.com/gcgrossi/sharknado) shark classification model, a natural extension to shark detection has been proposed. Using the same dataset two methods have been inspected:
+
+1. A Region Proposal methodology 
+2. A Bounding Box Regression methodology
+
+The Region Proposal method was based on classifing regions of images proposed by the OpenCV Selective Search algorithm and does not require any new model building, or retraining. The proposed regions are classified and only the high confidence predictions are retained. A Non-Maxima-Suppression algorithm merges the final rois into one. Even if the method is the natural and most straightforward extension of any classifier, it turned out to be extremely slow and imprecise. 
+
+The Bounding Box regression methodology aims at training a new model to predict the coordinates of the box surrounding the shark in the image. The methodology required annotating the dataset, building and retraining a new model. A fine tune of the VGG16 Convolutional Network has been chosen as architecture.
+
+The latter method has been evaluated on a test set of roughly 60 images. The intersection over union (IoU) metric has been chosen to measure the regression performance. The sharknado classification has been applied to the rois obtained by the regression and the accuracy of the classification has been measured. On the test set the average IoU measured was 74% while the mean accuracy was measured to be 81%.
+
+Given the statistics the model produces a good result in terms of regression and a less striking classification. In total, the result is acceptable, and can be improved by means of a better classification and enlarging the statistics of the training sample for the regression model.
+
